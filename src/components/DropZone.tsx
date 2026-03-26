@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 interface DropZoneProps {
@@ -12,16 +12,23 @@ interface DropZoneProps {
  * the useFlightData hook via fileValidator.ts.
  */
 export function DropZone({ onFile, disabled = false }: DropZoneProps) {
+  const [rejectionMessage, setRejectionMessage] = useState<string | null>(null);
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
+        setRejectionMessage(null);
         onFile(acceptedFiles[0]);
       }
     },
     [onFile],
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const onDropRejected = useCallback(() => {
+    setRejectionMessage('Unsupported file type. Please upload a .gpx or .csv file.');
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
     accept: {
       'application/gpx+xml': ['.gpx'],
@@ -30,8 +37,10 @@ export function DropZone({ onFile, disabled = false }: DropZoneProps) {
     },
     multiple: false,
     disabled,
-    // Prevent react-dropzone from reading the file automatically
-    noClick: false,
+    onDropRejected,
+    // Use explicit button click to avoid accidental click interception issues.
+    noClick: true,
+    noKeyboard: true,
   });
 
   return (
@@ -67,7 +76,19 @@ export function DropZone({ onFile, disabled = false }: DropZoneProps) {
         {isDragActive ? 'Drop your flight log here…' : 'Drag & drop a flight log'}
       </p>
       <p className="text-sm">Supports .gpx and .csv (max 5 MB)</p>
-      <p className="text-xs text-slate-500">or click to browse files</p>
+      <button
+        type="button"
+        onClick={open}
+        disabled={disabled}
+        className="text-xs text-slate-300 hover:text-white underline disabled:opacity-50 disabled:no-underline"
+      >
+        Browse files
+      </button>
+      {rejectionMessage && (
+        <p className="text-xs text-red-400" role="alert">
+          {rejectionMessage}
+        </p>
+      )}
     </div>
   );
 }
