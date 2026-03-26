@@ -8,6 +8,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler,
   type ChartOptions,
   type ChartData,
 } from 'chart.js';
@@ -22,13 +23,17 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  Filler,
 );
 
 /** Downsample points to at most `maxPoints` evenly-spaced entries for performance. */
 function downsample<T>(arr: T[], maxPoints: number): T[] {
   if (arr.length <= maxPoints) return arr;
   const step = arr.length / maxPoints;
-  return Array.from({ length: maxPoints }, (_, i) => arr[Math.round(i * step)]);
+  return Array.from({ length: maxPoints }, (_, i) => {
+    const idx = Math.min(arr.length - 1, Math.floor(i * step));
+    return arr[idx];
+  });
 }
 
 interface TelemetryChartProps {
