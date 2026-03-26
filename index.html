@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlackBox – Flight Data Visualizer</title>
+    <!--
+      Content Security Policy:
+      - default-src 'self'           → blocks any unspecified resource type
+      - script-src 'self'            → only scripts served by this origin
+      - style-src 'self' 'unsafe-inline' → Leaflet injects inline styles at runtime
+      - img-src 'self' data: https://*.tile.openstreetmap.org
+                               → map tiles + data-URI marker icons
+      - connect-src 'self' https://*.tile.openstreetmap.org
+                               → tile XHR requests from react-leaflet
+      - object-src 'none'       → disables Flash / plugins
+      - base-uri 'self'         → prevents base-tag hijacking
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: https://*.tile.openstreetmap.org;
+        connect-src 'self' https://*.tile.openstreetmap.org;
+        object-src 'none';
+        base-uri 'self';
+      "
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
