@@ -1,4 +1,4 @@
-# Sample workflow for building and deploying a Jekyll site to GitHub Pages
+# Workflow for building and deploying the Vite static site to GitHub Pages
 name: Deploy static site to GitHub Pages
 
 on:
@@ -42,6 +42,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # Vite production build output
           path: ./dist
 
   # Deployment job
